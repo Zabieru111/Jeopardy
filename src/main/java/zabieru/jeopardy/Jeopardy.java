@@ -66,7 +66,7 @@ public class Jeopardy {
     public void save_board(String Board_Name) {
         try (FileWriter fw = new FileWriter("Boards/" + Board_Name)) {
             fw.write(num_categories + "\n");
-            fw.write(String.join(",", category_name) + "\n");
+            fw.write(String.join(":,:", category_name) + "\n");
             for (int i = 0; i < num_categories; ++i) {
                 for (int j = 0; j < 5; ++j) {
                     fw.write(display_question[i][j].toString() + "\n");
@@ -84,11 +84,11 @@ public class Jeopardy {
             int num_cat = Integer.parseInt(line.strip());
             change_size_board(num_cat);
             line = br.readLine();
-            category_name = line.strip().split(",");
+            category_name = line.strip().split(":,:");
             int index = 0;
             while ((line = br.readLine()) != null) {
                 line = line.strip();
-                String[] infos = line.split(",", -1);
+                String[] infos = line.split(":,:", -1);
                 String question = infos[0];
                 String answer = infos[1];
                 String img = infos[2];

@@ -595,17 +595,35 @@ public class App extends Application {
             public void handle(MouseEvent mouseEvent) {
                 boolean cond1 = true;
                 boolean cond2 = true;
-                if (answer_area.getText().matches("Enter the answer...") || answer_area.getText().matches("")) {
+                if (answer_area.getText().matches("Enter the answer...") || answer_area.getText().matches("")|| answer_area.getText().length()>200) {
                     answer_area.setStyle("-fx-border-color: #fc0303");
                     cond1 = false;
                 } else {
-                    answer_area.setStyle("-border: 0");
+                    if(answer_area.getText().length()>200){
+                        answer_area.setStyle("-fx-border-color: #fc0303");
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Answer should have less then 200 characters");
+                        alert.show();
+                        cond1 = false;
+                    }
+                    else {
+                        answer_area.setStyle("-border: 0");
+                    }
                 }
                 if (question_area.getText().matches("Enter the question...") || question_area.getText().matches("")) {
                     question_area.setStyle("-fx-border-color: #fc0303");
                     cond2 = false;
                 } else {
-                    question_area.setStyle("-border: 0");
+                    if(question_area.getText().length()>200){
+                        question_area.setStyle("-fx-border-color: #fc0303");
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Question should have less then 200 characters");
+                        alert.show();
+                        cond2 = false;
+                    }
+                    else {
+                        question_area.setStyle("-border: 0");
+                    }
                 }
                 StringBuilder path = new StringBuilder();
                 if (cond1 && cond2) {
@@ -747,10 +765,19 @@ public class App extends Application {
         StartGame.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                Scene play_scene = get_play_scene(width, height);
-                play_scene = load_game(width, height, stage, play_scene, username, username2, username3);
-                stage.setScene(play_scene);
-                stage.show();
+                boolean cond = true;
+                if(username.getText().length()>15 || username2.getText().length()>15 || username3.getText().length()>15){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Username length cannot be more then 15 character");
+                    alert.show();
+                    cond = false;
+                }
+                if(cond) {
+                    Scene play_scene = get_play_scene(width, height);
+                    play_scene = load_game(width, height, stage, play_scene, username, username2, username3);
+                    stage.setScene(play_scene);
+                    stage.show();
+                }
             }
         });
         return new Scene(player_init_vbox, width, height);
@@ -791,6 +818,9 @@ public class App extends Application {
         VBox temp_player_vbox = new VBox();
         Text temp_username = new Text(controller.players[0].getUsername());
         Text_Properties(temp_username);
+        temp_username.setWrappingWidth(150);
+        temp_username.setTextAlignment(TextAlignment.CENTER);
+        temp_username.setFont(new Font(temp_username.getFont().getFamily(),14));
         Text points = new Text(String.valueOf(controller.players[0].getPoints()));
         Text_Properties(points);
         temp_player_vbox.getChildren().addAll(temp_username, points);
@@ -801,6 +831,9 @@ public class App extends Application {
         VBox temp_player_vbox2 = new VBox();
         Text temp_username2 = new Text(controller.players[1].getUsername());
         Text_Properties(temp_username2);
+        temp_username2.setWrappingWidth(150);
+        temp_username2.setTextAlignment(TextAlignment.CENTER);
+        temp_username2.setFont(new Font(temp_username2.getFont().getFamily(),14));
         Text points2 = new Text(String.valueOf(controller.players[1].getPoints()));
         Text_Properties(points2);
         temp_player_vbox2.getChildren().addAll(temp_username2, points2);
@@ -811,6 +844,9 @@ public class App extends Application {
         VBox temp_player_vbox3 = new VBox();
         Text temp_username3 = new Text(controller.players[2].getUsername());
         Text_Properties(temp_username3);
+        temp_username3.setWrappingWidth(150);
+        temp_username3.setTextAlignment(TextAlignment.CENTER);
+        temp_username3.setFont(new Font(temp_username3.getFont().getFamily(),14));
         Text points3 = new Text(String.valueOf(controller.players[2].getPoints()));
         Text_Properties(points3);
         temp_player_vbox3.getChildren().addAll(temp_username3, points3);
@@ -848,12 +884,20 @@ public class App extends Application {
                 column.getChildren().add(temp_question);
 
                 VBox question_vbox = new VBox();
-                Text question = new Text("Question : " + cur_question.getQuestion());
+                Text question = new Text(cur_question.getQuestion());
                 Text_Properties(question);
-                question.setFont(new Font(question.getFont().getFamily(), 30));
-                Text answer = new Text("Answer : " + cur_question.getAnswer());
+                if(question.getText().length()<100) {
+                    question.setFont(new Font(question.getFont().getFamily(), 30));
+                }
+                question.setWrappingWidth(1000);
+                question.setTextAlignment(TextAlignment.CENTER);
+                Text answer = new Text(cur_question.getAnswer());
                 Text_Properties(answer);
-                answer.setFont(new Font(answer.getFont().getFamily(), 30));
+                answer.setWrappingWidth(1000);
+                answer.setTextAlignment(TextAlignment.CENTER);
+                if(answer.getText().length()<50) {
+                    answer.setFont(new Font(answer.getFont().getFamily(), 30));
+                }
                 answer.setOpacity(0);
                 ImageView imageView = new ImageView();
                 if (!questions[i][j].getImg().matches("")) {
@@ -883,8 +927,6 @@ public class App extends Application {
                 Text_Properties(player_question_title);
                 player_question_title.setFont(new Font(player_question_title.getFont().getFamily(), 30));
                 HBox player_question_group = new HBox();
-                player_question_group.setSpacing(40);
-                player_question_group.setAlignment(Pos.CENTER);
                 HBox footer = new HBox();
                 VBox reveal_vbox = new VBox();
                 Button reveal = new Button("Reveal");
@@ -897,6 +939,9 @@ public class App extends Application {
                     VBox temp_player = new VBox();
                     Text temp_Username = new Text(temp_user.getUsername());
                     Text_Properties(temp_Username);
+                    temp_Username.setFont(new Font(temp_Username.getFont().getFamily(),14));
+                    temp_Username.setWrappingWidth(150);
+                    temp_Username.setTextAlignment(TextAlignment.CENTER);
                     HBox point_box = new HBox();
                     Text minus = new Text("-");
                     Text_Properties(minus);
@@ -913,6 +958,8 @@ public class App extends Application {
                     temp_player.getChildren().addAll(temp_Username, point_box);
                     temp_player.setAlignment(Pos.CENTER);
                     temp_player.setSpacing(20);
+                    temp_player.setMaxHeight(100);
+                    temp_player.setMinHeight(100);
                     temp_player.setPadding(new Insets(0, 0, 20, 0));
                     player_question_group.getChildren().add(temp_player);
                     minus.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -958,7 +1005,8 @@ public class App extends Application {
                 footer.setMinWidth(width);
                 footer.setMaxWidth(width);
                 footer.setPrefWidth(width);
-                reveal_vbox.setPadding(new Insets(0, width / 2 - 340, 0, 20));
+                reveal_vbox.setPadding(new Insets(0, width / 2 - 455, 0, 20));
+                player_question_group.setSpacing(60);
                 player_question_group.setAlignment(Pos.CENTER);
                 audio.setAlignment(Pos.CENTER);
                 VBox final_footer = new VBox();

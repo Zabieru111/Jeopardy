@@ -64,7 +64,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return question + "," + answer + "," + img + "," + audio;
+        return question + ":,:" + answer + ":,:" + img + ":,:" + audio;
     }
 
     public String getAudio() {
